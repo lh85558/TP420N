@@ -80,10 +80,10 @@ jobs:
     - name: Copy firmware files
       run: |
         mkdir -p $GITHUB_WORKSPACE/firmware
-        cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
-        cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
-        cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-sysupgrade.bin 2>/dev/null || true
-        cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-factory.bin 2>/dev/null || true
+        cp ~/openwrt/bin/target/linux/ath79/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
+        cp ~/openwrt/bin/target/linux/ath79/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
+        cp ~/openwrt/bin/target/linux/ath79/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-sysupgrade.bin 2>/dev/null || true
+        cp ~/openwrt/bin/target/linux/ath79/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-factory.bin 2>/dev/null || true
         
     - name: Upload firmware artifacts
       uses: actions/upload-artifact@v4
