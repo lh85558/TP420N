@@ -1,0 +1,72 @@
+#!/bin/sh
+# TP-LINK WR842N V3 PrintServer Startup Script
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+# Set hostname
+uci set system.@system[0].hostname='THDN-PrintServer'
+uci commit system
+
+# Configure LAN IP
+uci set network.lan.ipaddr='192.168.10.1'
+uci set network.lan.proto='static'
+uci set network.lan.netmask='255.255.255.0'
+uci commit network
+
+# Configure WiFi
+uci set wireless.@wifi-device[0].disabled='0'
+uci set wireless.@wifi-iface[0].ssid='THDN-dayin'
+uci set wireless.@wifi-iface[0].encryption='psk2'
+uci set wireless.@wifi-iface[0].key='thdn12345678'
+uci commit wireless
+
+# Set admin password
+echo 'admin:thdn12345678' | chpasswd
+
+# Configure CUPS
+if [ ! -f /etc/cups/cupsd.conf ]; then
+    cp /etc/cups/cupsd.conf.default /etc/cups/cupsd.conf
+fi
+
+# Start CUPS service
+/etc/init.d/cupsd enable
+/etc/init.d/cupsd start
+
+# Start VirtualHere USB server
+/etc/init.d/virtualhere-usb-server enable
+/etc/init.d/virtualhere-usb-server start
+
+# Configure timezone
+uci set system.@system[0].timezone='CST-8'
+uci set system.@system[0].zonename='Asia/Shanghai'
+uci commit system
+
+# Set NTP servers
+uci set system.ntp.enable_server='1'
+uci set system.ntp.server='ntp.aliyun.com cn.pool.ntp.org'
+uci commit system
+
+# Configure firewall for printing services
+uci add firewall rule
+uci set firewall.@rule[-1].name='Allow-Printer-9100'
+uci set firewall.@rule[-1].src='wan'
+uci set firewall.@rule[-1].proto='tcp'
+uci set firewall.@rule[-1].dest_port='9100'
+uci set firewall.@rule[-1].target='ACCEPT'
+uci commit firewall
+
+# Restart services
+/etc/init.d/network restart
+/etc/init.d/firewall restart
+/etc/init.d/system restart
+
+# Enable autoreboot
+/etc/init.d/autoreboot enable
+
+# Print startup message
+echo "TP-LINK WR842N V3 PrintServer started successfully!"
+echo "LAN IP: 192.168.10.1"
+echo "WiFi SSID: THDN-dayin"
+echo "Web Login: admin / thdn12345678"
+
+exit 0

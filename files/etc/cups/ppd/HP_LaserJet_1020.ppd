@@ -1,0 +1,94 @@
+*PPD-Adobe: "4.3"
+*%%%% PPD file for HP LaserJet 1020 with HPLIP
+*%%%% Created by HPLIP
+*%%%% Copyright (c) 2001-2020 HP Development Company, L.P.
+*%%%% 
+*%%%% This software is provided 'as is' without warranty of any kind,
+*%%%% either expressed or implied, including, but not limited to, the
+*%%%% implied warranties of merchantability and fitness for a particular
+*%%%% purpose.
+*%%%% 
+
+*FormatVersion: "4.3"
+*FileVersion: "1.0"
+*LanguageVersion: Chinese
+*LanguageEncoding: ISOLatin1
+*PCFileName: "HPLJ1020.PPD"
+*Product: "(HP LaserJet 1020)"
+*Manufacturer: "HP"
+*ModelName: "HP LaserJet 1020"
+*ShortNickName: "HP LaserJet 1020"
+*NickName: "HP LaserJet 1020, hpcups 3.20.3"
+
+*%%%% Basic Device Capabilities
+*LanguageLevel: "3"
+*ColorDevice: False
+*DefaultColorSpace: Gray
+*TTRasterizer: Type42
+*FileSystem: False
+
+*%%%% Paper Handling
+*OpenUI *PageSize/Media Size: PickOne
+*OrderDependency: 10 AnySetup *PageSize
+*DefaultPageSize: A4
+*PageSize A4/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
+*PageSize Letter/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
+*PageSize Legal/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageSize
+
+*OpenUI *PageRegion: PickOne
+*OrderDependency: 10 AnySetup *PageRegion
+*DefaultPageRegion: A4
+*PageRegion A4/A4: "<</PageSize[595 842]/ImagingBBox null>>setpagedevice"
+*PageRegion Letter/US Letter: "<</PageSize[612 792]/ImagingBBox null>>setpagedevice"
+*PageRegion Legal/US Legal: "<</PageSize[612 1008]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageRegion
+
+*DefaultPaperDimension: A4
+*PaperDimension A4: "595 842"
+*PaperDimension Letter: "612 792"
+*PaperDimension Legal: "612 1008"
+
+*%%%% Input Slots
+*OpenUI *InputSlot/Media Source: PickOne
+*OrderDependency: 10 AnySetup *InputSlot
+*DefaultInputSlot: Auto
+*InputSlot Auto/Auto Select: ""
+*InputSlot Manual/Manual Feed: ""
+*InputSlot Upper/Tray 1: ""
+*CloseUI: *InputSlot
+
+*%%%% Resolution and Color
+*OpenUI *Resolution/Resolution: PickOne
+*OrderDependency: 10 AnySetup *Resolution
+*DefaultResolution: 600dpi
+*Resolution 600dpi/600 dpi: "<</HWResolution[600 600]>>setpagedevice"
+*Resolution 300dpi/300 dpi: "<</HWResolution[300 300]>>setpagedevice"
+*CloseUI: *Resolution
+
+*OpenUI *Quality/Print Quality: PickOne
+*OrderDependency: 10 AnySetup *Quality
+*DefaultQuality: Normal
+*Quality Normal/Normal: ""
+*Quality Draft/Draft: ""
+*Quality High/High: ""
+*CloseUI: *Quality
+
+*%%%% Duplex
+*OpenUI *Duplex/Double-Sided Printing: PickOne
+*OrderDependency: 10 AnySetup *Duplex
+*DefaultDuplex: None
+*Duplex None/Off: ""
+*Duplex DuplexNoTumble/Long-Edge Binding: ""
+*Duplex DuplexTumble/Short-Edge Binding: ""
+*CloseUI: *Duplex
+
+*%%%% Chinese Localization
+*Chinese.Translation PageSize: "纸张大小"
+*Chinese.Translation PageRegion: "页面区域"
+*Chinese.Translation InputSlot: "纸张来源"
+*Chinese.Translation Resolution: "分辨率"
+*Chinese.Translation Quality: "打印质量"
+*Chinese.Translation Duplex: "双面打印"
+
+*%%%% End of PPD file

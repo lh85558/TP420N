@@ -1,0 +1,75 @@
+#!/bin/sh
+# TP-LINK WR842N V3 - AP Mode Toggle Script
+
+MODE_FILE="/etc/ap_mode_enabled"
+LOG_FILE="/var/log/ap_mode.log"
+
+log_message() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+}
+
+toggle_ap_mode() {
+    if [ -f "$MODE_FILE" ]; then
+        # Disable AP mode, enable router mode
+        log_message "Disabling AP mode, enabling router mode"
+        
+        # Configure network for router mode
+        uci set network.lan.proto='static'
+        uci set network.lan.ipaddr='192.168.10.1'
+        uci set network.lan.netmask='255.255.255.0'
+        uci set network.lan.dns='8.8.8.8 8.8.4.4'
+        
+        # Configure WAN
+        uci set network.wan.proto='dhcp'
+        uci set network.wan.ifname='eth1'
+        
+        # Configure wireless for router mode
+        uci set wireless.@wifi-iface[0].mode='ap'
+        uci set wireless.@wifi-iface[0].network='lan'
+        
+        # Remove AP mode marker
+        rm -f "$MODE_FILE"
+        
+        log_message "Router mode enabled"
+        echo "已切换到路由器模式"
+        
+    else
+        # Enable AP mode, disable router mode
+        log_message "Enabling AP mode"
+        
+        # Configure network for AP mode
+        uci set network.lan.proto='dhcp'
+        uci delete network.lan.ipaddr
+        uci delete network.lan.netmask
+        uci delete network.lan.dns
+        
+        # Disable WAN
+        uci set network.wan.proto='none'
+        
+        # Configure wireless for AP mode
+        uci set wireless.@wifi-iface[0].mode='ap'
+        uci set wireless.@wifi-iface[0].network='lan'
+        
+        # Create AP mode marker
+        touch "$MODE_FILE"
+        
+        log_message "AP mode enabled"
+        echo "已切换到AP模式"
+    fi
+    
+    # Commit changes
+    uci commit network
+    uci commit wireless
+    
+    # Restart services
+    /etc/init.d/network restart
+    sleep 5
+    /etc/init.d/firewall restart
+    
+    log_message "Services restarted"
+}
+
+show_status() {
+    if [ -f "$MODE_FILE" ]; then
+        echo "当前模式: AP模式"
+        echo "LAN口将自动获取

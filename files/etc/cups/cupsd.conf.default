@@ -1,0 +1,69 @@
+# CUPS configuration for TP-LINK WR842N V3 PrintServer
+# Default configuration template
+
+# Listen on all interfaces
+Listen *:631
+Listen /var/run/cups/cups.sock
+
+# Enable web interface
+WebInterface Yes
+
+# Default authentication type
+DefaultAuthType Basic
+
+# System group
+SystemGroup root
+
+# Job privacy
+JobPrivateAccess default
+JobPrivateValues default
+
+# Subscription privacy
+SubscriptionPrivateAccess default
+SubscriptionPrivateValues default
+
+# Allow remote access
+<Location />
+  Order allow,deny
+  Allow from all
+</Location>
+
+# Allow admin access from LAN
+<Location /admin>
+  Order allow,deny
+  Allow from 192.168.10.0/24
+  Allow from 127.0.0.1
+</Location>
+
+# Allow configuration from LAN
+<Location /admin/conf>
+  AuthType Default
+  Require user @SYSTEM
+  Order allow,deny
+  Allow from 192.168.10.0/24
+  Allow from 127.0.0.1
+</Location>
+
+# Log level
+LogLevel info
+
+# Max log size
+MaxLogSize 1m
+
+# Preserve job history
+PreserveJobHistory Yes
+PreserveJobFiles Yes
+AutoPurgeJobs No
+
+# Max jobs per user
+MaxJobsPerUser 100
+
+# Max jobs per printer
+MaxJobsPerPrinter 1000
+
+# Job retry
+JobRetryLimit 5
+JobRetryInterval 30
+
+# Chinese localization
+DefaultLanguage zh-CN

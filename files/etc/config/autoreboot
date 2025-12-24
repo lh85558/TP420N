@@ -1,0 +1,8 @@
+config autoreboot
+	option enable '1'
+	option week '0'
+	option hour '3'
+	option minute '30'
+	option dayofmonth '*'
+	option month '*'
+	option timezone 'CST-8'
