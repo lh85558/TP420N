@@ -1,0 +1,136 @@
+#!/bin/sh
+# TP-LINK WR842N V3 - Printer Setup Script
+
+PRINTER_CONFIG_DIR="/etc/cups/printers"
+PPD_DIR="/etc/cups/ppd"
+LOG_FILE="/var/log/printer_setup.log"
+
+log_message() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+}
+
+setup_hp_printers() {
+    log_message "Setting up HP LaserJet printers"
+    
+    # Create printer configuration directory
+    mkdir -p "$PRINTER_CONFIG_DIR"
+    mkdir -p "$PPD_DIR"
+    
+    # HP LaserJet 1020
+    if [ ! -f "$PPD_DIR/HP_LaserJet_1020.ppd" ]; then
+        log_message "Configuring HP LaserJet 1020"
+        lpadmin -p HP_LaserJet_1020 -E -v usb://HP/LaserJet%201020 -P /etc/cups/ppd/HP_LaserJet_1020.ppd
+        lpadmin -p HP_LaserJet_1020 -o printer-is-shared=true
+        lpadmin -p HP_LaserJet_1020 -o printer-location="客厅打印机"
+        lpadmin -p HP_LaserJet_1020 -o printer-info="HP LaserJet 1020 黑白激光打印机"
+        log_message "HP LaserJet 1020 configured"
+    fi
+    
+    # HP LaserJet 1020 Plus
+    if [ ! -f "$PPD_DIR/HP_LaserJet_1020_Plus.ppd" ]; then
+        log_message "Configuring HP LaserJet 1020 Plus"
+        lpadmin -p HP_LaserJet_1020_Plus -E -v usb://HP/LaserJet%201020%20Plus -P /etc/cups/ppd/HP_LaserJet_1020.ppd
+        lpadmin -p HP_LaserJet_1020_Plus -o printer-is-shared=true
+        lpadmin -p HP_LaserJet_1020_Plus -o printer-location="书房打印机"
+        lpadmin -p HP_LaserJet_1020_Plus -o printer-info="HP LaserJet 1020 Plus 黑白激光打印机"
+        log_message "HP LaserJet 1020 Plus configured"
+    fi
+    
+    # HP LaserJet 1007
+    if [ ! -f "$PPD_DIR/HP_LaserJet_1007.ppd" ]; then
+        log_message "Configuring HP LaserJet 1007"
+        lpadmin -p HP_LaserJet_1007 -E -v usb://HP/LaserJet%201007 -P /etc/cups/ppd/HP_LaserJet_1020.ppd
+        lpadmin -p HP_LaserJet_1007 -o printer-is-shared=true
+        lpadmin -p HP_LaserJet_1007 -o printer-location="办公室打印机"
+        lpadmin -p HP_LaserJet_1007 -o printer-info="HP LaserJet 1007 黑白激光打印机"
+        log_message "HP LaserJet 1007 configured"
+    fi
+    
+    # HP LaserJet 1008
+    if [ ! -f "$PPD_DIR/HP_LaserJet_1008.ppd" ]; then
+        log_message "Configuring HP LaserJet 1008"
+        lpadmin -p HP_LaserJet_1008 -E -v usb://HP/LaserJet%201008 -P /etc/cups/ppd/HP_LaserJet_1020.ppd
+        lpadmin -p HP_LaserJet_1008 -o printer-is-shared=true
+        lpadmin -p HP_LaserJet_1008 -o printer-location="家庭打印机"
+        lpadmin -p HP_LaserJet_1008 -o printer-info="HP LaserJet 1008 黑白激光打印机"
+        log_message "HP LaserJet 1008 configured"
+    fi
+    
+    # HP LaserJet 1108
+    if [ ! -f "$PPD_DIR/HP_LaserJet_1108.ppd" ]; then
+        log_message "Configuring HP LaserJet 1108"
+        lpadmin -p HP_LaserJet_1108 -E -v usb://HP/LaserJet%201108 -P /etc/cups/ppd/HP_LaserJet_1020.ppd
+        lpadmin -p HP_LaserJet_1108 -o printer-is-shared=true
+        lpadmin -p HP_LaserJet_1108 -o printer-location="会议室打印机"
+        lpadmin -p HP_LaserJet_1108 -o printer-info="HP LaserJet 1108 黑白激光打印机"
+        log_message "HP LaserJet 1108 configured"
+    fi
+}
+
+setup_network_printer() {
+    local ip="$1"
+    local name="$2"
+    
+    if [ -z "$ip" ] || [ -z "$name" ]; then
+        echo "用法: setup-printers network <IP地址> <打印机名称>"
+        return 1
+    fi
+    
+    log_message "Setting up network printer: $name at $ip"
+    
+    lpadmin -p "$name" -E -v "socket://$ip:9100" -P /etc/cups/ppd/HP_LaserJet_1020.ppd
+    lpadmin -p "$name" -o printer-is-shared=true
+    lpadmin -p "$name" -o printer-location="网络打印机 ($ip)"
+    lpadmin -p "$name" -o printer-info="网络打印机 $name"
+    
+    log_message "Network printer $name configured"
+}
+
+enable_remote_printing() {
+    log_message "Enabling remote printing"
+    
+    # Configure CUPS for remote access
+    sed -i 's/Listen localhost:631/Listen *:631/' /etc/cups/cupsd.conf
+    sed -i 's/Browsing Off/Browsing On/' /etc/cups/cupsd.conf
+    sed -i 's/BrowseLocalProtocols/BrowseRemoteProtocols/' /etc/cups/cupsd.conf
+    
+    # Add firewall rules for remote printing
+    uci add firewall rule
+    uci set firewall.@rule[-1].name='Allow-Remote-Printing'
+    uci set firewall.@rule[-1].src='wan'
+    uci set firewall.@rule[-1].proto='tcp'
+    uci set firewall.@rule[-1].dest_port='631'
+    uci set firewall.@rule[-1].target='ACCEPT'
+    uci commit firewall
+    
+    log_message "Remote printing enabled"
+}
+
+show_printers() {
+    echo "已配置的打印机:"
+    lpstat -p -d
+}
+
+case "$1" in
+    setup)
+        setup_hp_printers
+        ;;
+    network)
+        setup_network_printer "$2" "$3"
+        ;;
+    remote)
+        enable_remote_printing
+        ;;
+    status)
+        show_printers
+        ;;
+    *)
+        echo "用法: $0 {setup|network|remote|status}"
+        echo ""
+        echo "  setup                    - 设置HP打印机"
+        echo "  network <IP> <名称>     - 设置网络打印机"
+        echo "  remote                   - 启用远程打印"
+        echo "  status                   - 显示打印机状态"
+        exit 1
+        ;;
+esac

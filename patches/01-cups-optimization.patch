@@ -1,0 +1,31 @@
+--- a/package/utils/busybox/config/networking/udhcp/Config.in
++++ b/package/utils/busybox/config/networking/udhcp/Config.in
+@@ -1,6 +1,6 @@
+ config BUSYBOX_CONFIG_UDHCPC
+ 	bool "udhcpc (24 kb)"
+-	default y
++	default n
+ 	help
+ 	  The udhcp client negotiates a lease with the DHCP server and
+ 	  notifies a set of scripts when a leases is obtained or lost.
+--- a/package/network/services/dnsmasq/files/dnsmasq.init
++++ b/package/network/services/dnsmasq/files/dnsmasq.init
+@@ -1,6 +1,6 @@
+ #!/bin/sh /etc/rc.common
+ START=19
+-USE_PROCD=1
++USE_PROCD=0
+ 
+ DNSMASQ_DHCP_VER=4
+ DNSMASQ_SUPPRESS_WARNINGS=""
+--- a/package/print/cups/Makefile
++++ b/package/print/cups/Makefile
+@@ -1,7 +1,7 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=cups
+-PKG_VERSION:=2.3.3
++PKG_VERSION:=2.4.2
+ PKG_RELEASE:=1
+ 
+ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-source.tar.gz
