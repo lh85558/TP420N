@@ -56,8 +56,8 @@ if [ $? -eq 0 ]; then
     mkdir -p "$FIRMWARE_DIR"
     
     echo "Copying firmware files..."
-    cp bin/targets/ar71xx/generic/*842n*v3*sysupgrade.bin "$FIRMWARE_DIR/" 2>/dev/null || true
-    cp bin/targets/ar71xx/generic/*842n*v3*factory.bin "$FIRMWARE_DIR/" 2>/dev/null || true
+    cp bin/target/linux/ath79/generic/*842n*v3*sysupgrade.bin "$FIRMWARE_DIR/" 2>/dev/null || true
+    cp bin/target/linux/ath79/generic/*842n*v3*factory.bin "$FIRMWARE_DIR/" 2>/dev/null || true
     
     # Rename files for clarity
     cd "$FIRMWARE_DIR"
