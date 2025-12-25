@@ -17,7 +17,7 @@ cd "$OPENWRT_DIR"
 # Clone OpenWrt source if not exists
 if [ ! -d ".git" ]; then
     echo "Cloning OpenWrt 21.02 source code..."
-    git clone https://gitcode.com/lh85558.git -b "$OPENWRT_BRANCH" .
+    git clone https://github.com/openwrt/openwrt.git -b "$OPENWRT_BRANCH" .
 else
     echo "Updating OpenWrt source code..."
     git fetch origin
