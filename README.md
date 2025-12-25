@@ -33,14 +33,14 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-repo/tplink-842n-v3-printserver.git
+git clone https://gitcode.com/lh85558/TP842N.git tplink-842n-v3-printserver
 cd tplink-842n-v3-printserver
 
 # 安装依赖
 sudo apt update
 sudo apt install -y build-essential ccache ecj fastjar file g++ gawk \
 gettext git java-propose-classpath libelf-dev libncurses5-dev \
-libncursesw5-dev libssl-dev python python2.7-dev python3 unzip wget \
+libncursesw5-dev libssl-dev 2to3 python2 python-is-python3 python3 unzip wget \
 python3-distutils python3-setuptools python3-dev rsync subversion \
 swig time xsltproc zlib1g-dev
 
