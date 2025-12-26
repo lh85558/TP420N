@@ -28,7 +28,6 @@ jobs:
     - name: Install build dependencies
       run: |
         sudo apt-get update
-        sudo apt-get upgrade
         sudo apt-get install -y \
           build-essential ccache ecj fastjar file g++ gawk \
           gettext git java-propose-classpath libelf-dev libncurses5-dev \
@@ -80,16 +79,16 @@ jobs:
     - name: Copy firmware files
       run: |
         mkdir -p $GITHUB_WORKSPACE/firmware
-        cp ~/openwrt/bin/target/ar71xx/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
-        cp ~/openwrt/bin/target/ar71xx/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
-        cp ~/openwrt/bin/target/ar71xx/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-sysupgrade.bin 2>/dev/null || true
-        cp ~/openwrt/bin/target/ar71xx/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-factory.bin 2>/dev/null || true
+        cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
+        cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
+        cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-sysupgrade.bin 2>/dev/null || true
+        cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-factory.bin 2>/dev/null || true
         
     - name: Upload firmware artifacts
       uses: actions/upload-artifact@v4
       with:
         name: tplink-842n-v3-printserver-firmware
-        path: firmware/*.bin
+        path: $GITHUB_WORKSPACE/firmwarefirmware/*.bin
         retention-days: 30
         
     - name: Create Release
