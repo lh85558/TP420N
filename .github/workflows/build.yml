@@ -28,6 +28,7 @@ jobs:
     - name: Install build dependencies
       run: |
         sudo apt-get update
+        sudo apt-get upgrade
         sudo apt-get install -y \
           build-essential ccache ecj fastjar file g++ gawk \
           gettext git java-propose-classpath libelf-dev libncurses5-dev \
@@ -44,7 +45,7 @@ jobs:
       run: |
         cd ~
         if [ ! -d "openwrt" ]; then
-          git clone https://github.com/openwrt/openwrt.git -b openwrt-21.02
+          git clone https://gitcode.com/lh85558/openwrt.git -b openwrt-21.02
         fi
         cd openwrt
         git pull
@@ -69,6 +70,9 @@ jobs:
     - name: Configure build
       run: |
         cd ~/openwrt
+        ./scripts/feeds clean
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
         make defconfig
         
     - name: Build firmware
@@ -79,16 +83,20 @@ jobs:
     - name: Copy firmware files
       run: |
         mkdir -p $GITHUB_WORKSPACE/firmware
-        cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
+                cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
         cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
         cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-sysupgrade.bin 2>/dev/null || true
         cp ~/openwrt/bin/targets/ar71xx/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-factory.bin 2>/dev/null || true
+        cp ~/openwrt/bin/target/linux/ath79/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
+        cp ~/openwrt/bin/target/linux/ath79/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/ 2>/dev/null || true
+        cp ~/openwrt/bin/target/linux/ath79/generic/*842n*v3*sysupgrade.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-sysupgrade.bin 2>/dev/null || true
+        cp ~/openwrt/bin/target/linux/ath79/generic/*842n*v3*factory.bin $GITHUB_WORKSPACE/firmware/openwrt-ar71xx-generic-tl-wr842n-v3-squashfs-factory.bin 2>/dev/null || true
         
     - name: Upload firmware artifacts
       uses: actions/upload-artifact@v4
       with:
         name: tplink-842n-v3-printserver-firmware
-        path: $GITHUB_WORKSPACE/firmwarefirmware/*.bin
+        path: firmware/*.bin
         retention-days: 30
         
     - name: Create Release
